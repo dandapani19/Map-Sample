@@ -119,6 +119,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "Angular-Map"
+    }
+  },
+  "defaultProject": "Angular-Map",
+  "cli": {
+    "analytics": "fc9d709d-16af-45c4-bc3f-b969b6363795"
+  }
 }
