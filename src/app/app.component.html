@@ -6,16 +6,9 @@
 
   <agm-marker 
       *ngFor="let m of markers"
-      [latitude]="m.lat"
-      [longitude]="m.lng"
-      [label]="m.label">
+      [latitude]="m.lan"
+      [longitude]="m.lon"
+      [label]="m.name">
   </agm-marker>
-<!--   
-  <agm-circle [latitude]="lat + 0.3" [longitude]="lng" 
-      [radius]="5000"
-      [fillColor]="'red'"
-      [circleDraggable]="true"
-      [editable]="true">
-  </agm-circle> -->
 
 </agm-map>

@@ -1,14 +1,20 @@
-'use strict';
-module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define('User', {
-    username: DataTypes.STRING,
-    lag: DataTypes.DOUBLE,
-    lon: DataTypes.DOUBLE,
-    in_raids: DataTypes.BOOLEAN,
-    cab_id: DataTypes.NUMBER
-  }, {});
-  User.associate = function(models) {
-    // associations can be defined here
-  };
-  return User;
-};
+const mongoose = require('mongoose');
+const Schema   = mongoose.Schema
+
+const userSchema = new Schema({
+    name:{
+        type: String
+    },
+    lan:{
+        type: Number
+    },
+    lon:{
+        type:Number
+    },
+    in_raid:{
+        type:Boolean,
+        default: false,
+    }
+},{timestamps:true})
+
+module.exports = mongoose.model('User',userSchema)
