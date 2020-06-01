@@ -79,27 +79,63 @@ const CabListCount = (req, res, next)=>{
    }
 
    // Cab booked
-   const CabBook =(req, res, next) =>{
-       let cab_id =req.params.cab_id;
-       let cabdata={
-           available :true
-       }
-       Cab.findandmodify(cab_id, {$set:cabdata})
-       .then(response =>{
-           res.json({message:'User created successfully', data:response})
-       })
-   }
+//    const CabBook =(req, res, next) =>{
+//        let cab_id =req.params.cab_id;
+//        let cabdata={
+//            available :true
+//        }
+//        Cab.findandmodify(cab_id, {$set:cabdata})
+//        .then(response =>{
+//            res.json({message:'User created successfully', data:response})
+//        })
+//    }
 
-   // Cab unbooked
    const CabUnBook =(req, res, next) =>{
     let cab_id =req.params.cab_id;
     let cabdata={
-        available :false
+        available :true
     }
     Cab.findandmodify(cab_id, {$set:cabdata})
     .then(response =>{
         res.json({message:'User created successfully', data:response})
     })
+}
+
+   // Cab unbooked
+   const CabBook =(req, res, next) =>{
+    let cab_id =req.params.cab_id;
+    let user_id =req.params.user_id;
+
+    let cabdata={
+        available :false
+    }
+    Cab.findandmodify(cab_id, {$set:cabdata})
+    .then(response =>{
+        User.findById(user_id)
+        .then(userdata =>{
+            let raid = new Raid({
+                username: userdata.name,
+                user_id : userdata._id,
+                cabname : response.name,
+                cab_id  : response._id
+            })
+            raid.save()
+            .then(data =>{
+                res.json({message:'Cab booked successfully', data:response})
+            })
+            .catch(err =>{res.json({message:"Can not booked cab"})})
+        })
+        
+    })
+}
+
+const RaidList =(req, res, next) =>{
+    let cab_id = req.params.cab_id;
+    Raid.find()
+    .then(raiddata =>{
+        res.json({message:'Raid list ', data:raiddata})
+    })
+    .catch(err =>{res.json({message:"Raid not allowd"})})
 }
 
 module.exports ={
@@ -108,5 +144,6 @@ module.exports ={
     CreateCab,
     CreateUser,
     CabBook,
-    CabUnBook
+    CabUnBook,
+    RaidList
 }
