@@ -11,7 +11,7 @@ const cabSchema = new Schema({
     lon:{
         type:Number
     },
-    avaliable:{
+    available:{
         type:Boolean,
         default: true,
     }

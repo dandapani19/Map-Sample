@@ -5,7 +5,7 @@ const bodyparser = require('body-parser')
 const app = express()
 const CabRoute = require('./routes/cab')
 
-mongoose.connect('mongodb://localhost:27017/mapdb',{useNewUrlParser: true ,useUnifiedTopology :true})
+mongoose.connect('mongodb://localhost:27017/map-sampledb',{useNewUrlParser: true ,useUnifiedTopology :true})
 const db = mongoose.connection
 
 db.on('error',(err)=>{
@@ -36,8 +36,9 @@ app.use(function (req, res, next) {
 
 app.use(morgan('dev'))
 app.use(bodyparser.urlencoded({extended: true}))
-app.use(bodyparser.json)
+app.use(bodyparser.json())
 
+app.use('/cab',CabRoute)
 app.use((req, res, next) =>{
     const error = new Error('Not fount');
     error.status=404;
@@ -57,4 +58,3 @@ const port = process.env.PORT || 3000;
 app.listen(port,()=>{
     console.log(`Server is running on port ${port}`)
 });
-app.use('/cab',CabRoute)
