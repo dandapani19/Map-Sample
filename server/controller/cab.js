@@ -81,28 +81,37 @@ const CabListCount = (req, res, next)=>{
        })
    }
 
-   // Cab booked
-//    const CabBook =(req, res, next) =>{
-//        let cab_id =req.params.cab_id;
-//        let cabdata={
-//            available :true
-//        }
-//        Cab.findandmodify(cab_id, {$set:cabdata})
-//        .then(response =>{
-//            res.json({message:'User created successfully', data:response})
-//        })
-//    }
 
 // Cab unbook
    const CabUnBook =(req, res, next) =>{
-    let cab_id =req.params.cab_id;
+    let cab_id  = req.params.cab_id;
+    let user_id = req.params.user_id;
     Cab.findById(cab_id)
     .then(cabdata =>{
         cabdata.available = true;
         cabdata.save()
         .then(unbookdata =>{
-            res.json({message:'Cab Unbooked Successfully'})
+            User.findById(user_id)
+            .then(usrdata =>{
+                usrdata.in_raid = false;
+                usrdata.save()
+                .then(updatedata =>{
+                    res.json({message:'Cab Unbooked Successfully'})
+                })
+                .catch(err =>{
+                    res.json({message:'The user update faild'})
+                })
+            })
+            .catch(err =>{
+                res.json({message:'The user not found'})
+            })
         })
+        .catch(err =>{
+            res.json({message:'The cab unbook  faild'})
+        })
+    })
+    .catch(err =>{
+        res.json({message:'The Cab not available'})
     })
   }
 
@@ -114,7 +123,7 @@ const CabListCount = (req, res, next)=>{
     Cab.findById(cab_id)
     .then(cabdata =>{
         console.log("------find cab by cabid---",cabdata)
-        if(cabdata){
+        // if(cabdata.available == true){
             cabdata.available = false;
             cabdata.save()
             .then(response =>{
@@ -123,35 +132,41 @@ const CabListCount = (req, res, next)=>{
                     User.findById(user_id)
                     .then(userdata =>{
                         console.log('------------find user data by user id------->',userdata)
-                        let raid = new Raid({
-                            username: userdata.name,
-                            user_id : userdata._id,
-                            cabname : response.name,
-                            cab_id  : response._id
+                        // if(userdata.in_raid == false){
+                        userdata.in_raid=true;
+                        userdata.save()
+                        .then(udata =>{
+                            let raid = new Raid({
+                                username: udata.name,
+                                user_id : udata._id,
+                                cabname : response.name,
+                                cab_id  : response._id
+                            })
+                            raid.save()
+                            .then(data =>{
+                                console.log('---------create raid info-------')
+                                res.json({message:'Cab booked successfully', data:response})
+                            })
+                            .catch(err =>{res.json({message:"Raid not update"})})
                         })
-                        raid.save()
-                        .then(data =>{
-                            console.log('---------create raid info-------')
-                            res.json({message:'Cab booked successfully', data:response})
-                        })
-                        .catch(err =>{res.json({message:"Raid not update"})})
+                        .catch(err =>{res.json({message:"user not update"})})
+                    //   }
+                    //   return res.json({message:'User is already in raid'})
                     })
                 }
             })
             .catch(err =>{res.json({message:"Can not booked"})})
-        }  
+        // }  
+        // return res.json({message:'Cab  is already booked'})
     })
     .catch(err =>{res.json({message:"Can not available cab"})})
 }
 
 const RaidList =(req, res, next) =>{
     let cab_id = req.params.cab_id;
-    console.log('-------riad list- cab_id------->',cab_id)
-let raid_data =[];
+    let raid_data =[];
     Raid.find({cab_id:cab_id})
     .then(raiddata =>{
-        console.log('-------riad list-------->',raiddata.length)
-        console.log('-------riad list-------->',raiddata)
         if(raiddata.length>0){
             for(let raid of raiddata){
                 raid_data.push({UserName:raid.username,CanName:raid.cabname})
