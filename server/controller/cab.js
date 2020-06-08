@@ -3,9 +3,9 @@ const User = require('../models/user')
 const Raid = require('../models/raid')
 
 //Get Cab list
-
 const CabList = (req, res, next)=>{
-    console.log('---------get cab list------>')
+    console.log('---------get Cabs list------>')
+
  let data=[];
     Cab.find()
     .then(response =>{
@@ -15,7 +15,9 @@ const CabList = (req, res, next)=>{
                data.push(cab)
            }
        }
-       res.json({message:'The Cabs list', data:data})
+         res.json({message:'The Cabs list', data:data})
+         req.cabs = data
+         next();
       }
     })
     .catch(err =>{
@@ -23,6 +25,25 @@ const CabList = (req, res, next)=>{
     })
 }
 
+//User list 
+const UserList = (req, res, next)=>{
+    console.log('---------get User list------>')
+ let data=[];
+    User.find()
+    .then(response =>{
+   if(response){
+       for(let user of response){
+           if(user.in_raid == false){
+               data.push(user)
+           }
+       }
+       res.json({message:'The Users list', data:data})
+      }
+    })
+    .catch(err =>{
+        res.json({message:'The Users are not here'})
+    })
+}
 // Get Cabs  avaliable count
 
 const CabListCount = (req, res, next)=>{
@@ -179,6 +200,7 @@ const RaidList =(req, res, next) =>{
 
 module.exports ={
     CabList,
+    UserList,
     CabListCount,
     CreateCab,
     CreateUser,

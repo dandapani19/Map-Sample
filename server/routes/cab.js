@@ -4,6 +4,7 @@ const router = express.Router()
 const Cabcontroller = require('../controller/cab')
 
 router.get('/',Cabcontroller.CabList)
+router.get('/user',Cabcontroller.UserList)
 router.get('/count',Cabcontroller.CabListCount)
 router.post('/cabcreate',Cabcontroller.CreateCab)
 router.post('/usercreate',Cabcontroller.CreateUser)

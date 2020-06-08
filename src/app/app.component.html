@@ -9,6 +9,13 @@
       [latitude]="m.lan"
       [longitude]="m.lon"
       [label]="m.name">
-  </agm-marker>
+      </agm-marker>
+
+  <agm-marker 
+  *ngFor="let m of Users"
+  [latitude]="m.lan"
+  [longitude]="m.lon"
+  [label]="m.name">
+</agm-marker>
 
 </agm-map>
