@@ -12,8 +12,7 @@ import * as io from 'socket.io-client';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-	// socket;
-	messageList=[];
+	
 	markers =[];
 	Users =[];
 	title = 'Angular-Map';
